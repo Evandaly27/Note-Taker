@@ -20,10 +20,10 @@ router.post('/notes', asyncHandler(async (req, res) => {
 }));
 
 // DELETE "/api/notes/:id"
-router.delete('/notes/:id', asyncHandler(async (req, res) => {
+router.delete('/notes/:id', async (req, res) => {
     await store.removeNote(req.params.id);
     res.json({ ok: true });
-}));
+});
 
 // error handling middleware
 router.use((err, req, res, next) => {

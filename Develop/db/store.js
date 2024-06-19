@@ -1,6 +1,7 @@
 const util = require('util');
 const fs = require('fs');
-const uuidv1 = require('uuid/v1');
+const { v1: uuidv1 } = require('uuid');
+
 
 const readFileAsync = util.promisify(fs.readFile);
 const writeFileAsync = util.promisify(fs.writeFile);
@@ -19,6 +20,16 @@ class Store {
             return [];
         } 
     }
+
+    async write(notes) {
+        try {
+          console.log('Writing notes:', JSON.stringify(notes, null, 2));
+          await writeFileAsync(this.filePath, JSON.stringify(notes, null, 2));
+        } catch (err) {
+          console.error('Error writing file:', err);
+          throw new Error('Error writing to file');
+        }
+      }
 
     async getNotes() {
         try {
@@ -41,7 +52,9 @@ class Store {
         try {
             const notes = await this.getNotes();
             const updatedNotes = [...notes, newNote];
+            console.log('Updated notes:', updatedNotes);
             await this.write(updatedNotes);
+            console.log('New note added:', newNote);
             return newNote;
         } catch (err) {
             console.log(err);
